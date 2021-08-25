@@ -14,6 +14,7 @@ class GoogleImageScrapper:
     """
     Scraps image from google search and downloads it to 'Download' dir
     """
+
     def __init__(self, query):
         #  install webdriver
         self.opts = webdriver.ChromeOptions()
@@ -52,7 +53,7 @@ class GoogleImageScrapper:
             thumbnail_imgs = self.webdriver.find_elements_by_css_selector('img.Q4LuWd')
             thumbnail_img_count = len(thumbnail_imgs)
             info_log.info(f'Found {thumbnail_img_count} thumbnail images! '
-                  f'Extracting links from {self.result_start}:{thumbnail_img_count}...')
+                          f'Extracting links from {self.result_start}:{thumbnail_img_count}...')
 
             #  try clicking on thumbnail
             for thumbnail_img in thumbnail_imgs[self.result_start:thumbnail_img_count]:
@@ -84,7 +85,7 @@ class GoogleImageScrapper:
                     self.webdriver.execute_script('document.querySelector(".mye4qd").click();')
             self.result_start = len(thumbnail_imgs)
         self.webdriver.quit()
-        info_log.info('Stop')
+        info_log.info('Success')
         return self.img_urls
 
     def download_image(self):
