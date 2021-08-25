@@ -1,3 +1,4 @@
+#! /usr/bin/env python3
 import time
 import os
 import io
@@ -6,6 +7,7 @@ from PIL import Image
 from selenium import webdriver
 from webdriver_manager.chrome import ChromeDriverManager
 from datetime import datetime
+from loggers import info_log, error_log
 
 
 class GoogleImageScrapper:
@@ -49,7 +51,7 @@ class GoogleImageScrapper:
             #  find all img tags
             thumbnail_imgs = self.webdriver.find_elements_by_css_selector('img.Q4LuWd')
             thumbnail_img_count = len(thumbnail_imgs)
-            print(f'Found {thumbnail_img_count} thumbnail images! '
+            info_log.info(f'Found {thumbnail_img_count} thumbnail images! '
                   f'Extracting links from {self.result_start}:{thumbnail_img_count}...')
 
             #  try clicking on thumbnail
@@ -58,7 +60,7 @@ class GoogleImageScrapper:
                     thumbnail_img.click()
                     time.sleep(sleep)
                 except Exception as err:
-                    print(err)
+                    error_log.exception(err)
                     continue
 
                 #  get full img url
@@ -70,19 +72,19 @@ class GoogleImageScrapper:
 
                 #  exit while loop
                 if len(self.img_urls) >= max_urls:
-                    print(f'Got {self.img_count} image links! Closing...')
+                    info_log.info(f'Got {self.img_count} image links!')
                     break
 
             #  loads more images
             else:
-                print(f'Found {len(self.img_urls)} image links, looking for more...')
+                info_log.info(f'Found {len(self.img_urls)} image links, looking for more...')
                 time.sleep(sleep)
                 load_more_button = self.webdriver.find_element_by_css_selector('.mye4qd')
                 if load_more_button:
                     self.webdriver.execute_script('document.querySelector(".mye4qd").click();')
             self.result_start = len(thumbnail_imgs)
         self.webdriver.quit()
-        print('Bye!')
+        info_log.info('Stop')
         return self.img_urls
 
     def download_image(self):
@@ -95,7 +97,7 @@ class GoogleImageScrapper:
             if not os.path.exists(sub_dir_path):
                 os.makedirs(sub_dir_path)
 
-            #  create image files
+            #  save image files
             for url in self.img_urls:
                 file_name = str(datetime.now().strftime('%H-%M-%S.%f'))
                 try:
@@ -106,7 +108,9 @@ class GoogleImageScrapper:
                     with open(file=f'{file_path}.jpeg', mode='wb') as file:
                         image.save(file, 'JPEG')
                 except Exception as err:
-                    print(f'ERROR downloading {url} - {err}')
+                    error_log.exception(f'ERROR downloading {url} - {err}')
+        else:
+            error_log.exception('No URLs found!')
 
 
 if __name__ == '__main__':
