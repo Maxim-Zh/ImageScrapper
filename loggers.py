@@ -22,7 +22,8 @@ logger_config = {
             'class': 'logging.FileHandler',
             'formatter': 'formatter',
             'filename': 'error_log.log',
-            'encoding': 'UTF-8'
+            'encoding': 'UTF-8',
+            'delay': 'True'
         }
     },
     'loggers': {
@@ -43,3 +44,4 @@ error_log = logging.getLogger(name='error_log')
 
 if __name__ == '__main__':
     info_log.info('TEST')
+    error_log.exception('TEST')
