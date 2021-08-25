@@ -5,6 +5,7 @@ Log settings
 import logging.config
 import os
 
+#  create log dir
 log_dir_name = os.path.join(os.path.dirname(__file__), 'Log')
 if not os.path.exists(log_dir_name):
     os.makedirs(log_dir_name)
