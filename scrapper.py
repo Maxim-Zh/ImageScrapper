@@ -8,43 +8,53 @@ from selenium import webdriver
 from webdriver_manager.chrome import ChromeDriverManager
 from datetime import datetime
 from loggers import info_log, error_log
+SE_DICT = {
+    'Google': 'https://www.google.com/search?safe=off&site=&tbm=isch&source=hp&q={q}&oq={q}&gs_l=img'
+}
 
 
-class GoogleImageScrapper:
+class SearchEngineImageScrapper:
     """
-    Scraps image from google search and downloads it to 'Download' dir
+    Scraps image from search engine and downloads it to 'Download' dir
     """
 
-    def __init__(self, query):
+    def __init__(self, search_engine: str):
         #  install webdriver
         self.opts = webdriver.ChromeOptions()
         self.opts.headless = True
         self.webdriver = webdriver.Chrome(executable_path=ChromeDriverManager().install(), options=self.opts)
 
         #  params
-        self.search_url = 'https://www.google.com/search?safe=off&site=&tbm=isch&source=hp&q={q}&oq={q}&gs_l=img'
-        self.query = query
+        self.search_engine = search_engine
+        self.search_url = SE_DICT[search_engine]
         self.img_urls = set()
         self.img_count = 0
         self.result_start = 0
+        self.query = None
+        self.sub_dir_name = ''
 
-    def get_img_urls(self, max_urls: int, sleep: int = 1, query: str = None) -> set:
+    def get_img_urls(self, query: str, max_urls: int, sleep: int = 1) -> set:
         """
-        Search Google for images by given query, return set of urls
+        Search Google for images by given query, return set of image urls
 
         :param query: what to search
         :param max_urls: number of images
         :param sleep: sleep between interactions
         :return: set of urls
         """
-        if query:
-            self.query = query
 
         def scroll_to_end():
             self.webdriver.execute_script('window.scrollTo(0, document.body.scrollHeight);')
             time.sleep(sleep)
 
-        self.webdriver.get(url=self.search_url.format(q=self.query))
+        self.webdriver.get(url=self.search_url.format(q=query))
+        self.query = query
+
+        for char in self.query:
+            if char not in r'<>:"/\|?*':
+                self.sub_dir_name += char
+            else:
+                self.sub_dir_name += '_'
 
         while self.img_count < max_urls:
             scroll_to_end()
@@ -92,7 +102,7 @@ class GoogleImageScrapper:
         if self.img_urls:
             #  create dirs
             dir_path = os.path.join(os.path.dirname(__file__), 'Download')
-            sub_dir_path = os.path.join(dir_path, self.query.capitalize())
+            sub_dir_path = os.path.join(dir_path, self.sub_dir_name.capitalize())
             if not os.path.exists(dir_path):
                 os.makedirs(dir_path)
             if not os.path.exists(sub_dir_path):
@@ -110,11 +120,14 @@ class GoogleImageScrapper:
                         image.save(file, 'JPEG')
                 except Exception as err:
                     error_log.exception(f'ERROR downloading {url} - {err}')
+            print(sub_dir_path)
+            return sub_dir_path
         else:
             error_log.exception('No URLs found!')
+            return None
 
 
 if __name__ == '__main__':
-    my_parser = GoogleImageScrapper(query='cat')
-    my_parser.get_img_urls(max_urls=1)
-    my_parser.download_image()
+    google_parser = SearchEngineImageScrapper(search_engine='Google')
+    google_parser.get_img_urls(query='cat', max_urls=1)
+    google_parser.download_image()
