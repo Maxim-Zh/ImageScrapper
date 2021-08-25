@@ -1,9 +1,9 @@
 #! /usr/bin/env python3
+import logging.config
+import os
 """
 Log settings
 """
-import logging.config
-import os
 
 #  create log dir
 log_dir_name = os.path.join(os.path.dirname(__file__), 'Log')
@@ -22,7 +22,8 @@ logger_config = {
             'class': 'logging.FileHandler',
             'formatter': 'formatter',
             'filename': os.path.join(log_dir_name, 'info_log.log'),
-            'encoding': 'UTF-8'
+            'encoding': 'UTF-8',
+            'delay': 'True'
         },
         'error_handler': {
             'class': 'logging.FileHandler',
