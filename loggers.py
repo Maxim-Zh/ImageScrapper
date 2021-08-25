@@ -3,6 +3,11 @@
 Log settings
 """
 import logging.config
+import os
+
+log_dir_name = os.path.join(os.path.dirname(__file__), 'Log')
+if not os.path.exists(log_dir_name):
+    os.makedirs(log_dir_name)
 
 logger_config = {
     'version': 1,
@@ -15,13 +20,13 @@ logger_config = {
         'info_handler': {
             'class': 'logging.FileHandler',
             'formatter': 'formatter',
-            'filename': 'info_log.log',
+            'filename': os.path.join(log_dir_name, 'info_log.log'),
             'encoding': 'UTF-8'
         },
         'error_handler': {
             'class': 'logging.FileHandler',
             'formatter': 'formatter',
-            'filename': 'error_log.log',
+            'filename': os.path.join(log_dir_name, 'error_log.log'),
             'encoding': 'UTF-8',
             'delay': 'True'
         }
