@@ -1,6 +1,6 @@
 #! /usr/bin/env python3
 import webbrowser
-from scrapper import SearchEngineImageScrapper
+from scrapper import ImageScrapper
 from tkinter import messagebox as mb
 from loggers import error_log
 
@@ -22,7 +22,7 @@ def set_focus(event):
 def start_button(search_engine, query, max_urls):
     if query != '' and max_urls != '' and not max_urls.isalpha():
         try:
-            scrapper = SearchEngineImageScrapper(search_engine=search_engine)
+            scrapper = ImageScrapper(search_engine=search_engine)
             scrapper.get_img_urls(query=query, max_urls=int(max_urls))
             result = scrapper.download_image()
             if result:

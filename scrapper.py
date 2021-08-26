@@ -13,7 +13,7 @@ SE_DICT = {
 }
 
 
-class SearchEngineImageScrapper:
+class ImageScrapper:
     """
     Scraps image from search engine and downloads it to 'Download' dir
     """
@@ -128,6 +128,6 @@ class SearchEngineImageScrapper:
 
 
 if __name__ == '__main__':
-    google_parser = SearchEngineImageScrapper(search_engine='Google')
+    google_parser = ImageScrapper(search_engine='Google')
     google_parser.get_img_urls(query='cat', max_urls=1)
     google_parser.download_image()
