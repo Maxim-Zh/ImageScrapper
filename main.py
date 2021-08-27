@@ -9,7 +9,7 @@ Main GUI module
 
 WINDOW_HEIGHT = 150
 WINDOW_WIDTH = 320
-SE_LIST = ['Website', 'Google', 'Yandex', ]
+SE_LIST = ['Google', 'Yandex', ]
 
 
 class MainWindow(tk.Tk):
