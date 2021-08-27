@@ -1,7 +1,12 @@
 #! /usr/bin/env python3
 import tkinter as tk
+import os
 from tkinter import ttk
-from handlers import click_on_entry, set_focus, start_button
+from handlers import click_on_entry, set_get_focus, start_button, on_closing
+
+"""
+Main GUI module
+"""
 
 WINDOW_HEIGHT = 150
 WINDOW_WIDTH = 320
@@ -21,12 +26,12 @@ class MainWindow(tk.Tk):
         self.title('Image Scrapper')
         self.geometry(f'{self.ww}x{self.wh}+{self.sw // 2 - self.ww // 2}+{self.sh // 2 - self.wh // 2}')
         self.resizable(False, False)
-        # self.iconbitmap('images/')
+        self.iconbitmap('images/icon.ico')
 
         # MAIN FRAME
         self.main_frame = MainFrame(master=self, relief=tk.FLAT)
         self.main_frame.bind(sequence='<Button-1>',
-                             func=lambda event: set_focus(event=event))
+                             func=lambda event: set_get_focus(event=event))
 
 
 class MainFrame(tk.Frame):
@@ -45,7 +50,7 @@ class MainFrame(tk.Frame):
                                      width=WINDOW_WIDTH)
         self.mf_message.place(y=5, relwidth=1, relheight=.5)
         self.mf_message.bind(sequence='<Button-1>',
-                             func=lambda event: set_focus(event=event))
+                             func=lambda event: set_get_focus(event=event))
 
         # OPTION MENU
         self.mf_om = ttk.OptionMenu(self, self.mf_opt_variable, 'Where to search?', *SE_LIST)
@@ -53,17 +58,17 @@ class MainFrame(tk.Frame):
 
         # ENTRY
         self.mf_search_entry = ttk.Entry(master=self, justify='center')
-        self.mf_search_entry.insert(0, 'What to search?')
+        self.mf_search_entry.insert(0, 'Paste your search')
         self.mf_search_entry.bind(sequence='<Button-1>',
                                   func=lambda event: click_on_entry(entry=self.mf_search_entry), add='+')
-        self.mf_search_entry.bind(sequence='<Button-1>', func=lambda event: set_focus(event=event), add='+')
+        self.mf_search_entry.bind(sequence='<Button-1>', func=lambda event: set_get_focus(event=event), add='+')
         self.mf_search_entry.place(x=10, y=93, relwidth=.5, relheight=.15, )
 
         self.mf_max_urls = ttk.Entry(master=self, justify='center')
         self.mf_max_urls.insert(0, 'N')
         self.mf_max_urls.bind(sequence='<Button-1>',
                               func=lambda event: click_on_entry(entry=self.mf_max_urls), add='+')
-        self.mf_max_urls.bind(sequence='<Button-1>', func=lambda event: set_focus(event=event), add='+')
+        self.mf_max_urls.bind(sequence='<Button-1>', func=lambda event: set_get_focus(event=event), add='+')
         self.mf_max_urls.place(x=171, y=93, relwidth=.16, relheight=.15)
 
         # BUTTON
@@ -72,10 +77,11 @@ class MainFrame(tk.Frame):
                             func=lambda event: start_button(search_engine=self.mf_opt_variable.get(),
                                                             query=self.mf_search_entry.get(),
                                                             max_urls=self.mf_max_urls.get()), add='+')
-        self.mf_button.bind(sequence='<Button-1>', func=lambda event: set_focus(event=event), add='+')
+        self.mf_button.bind(sequence='<Button-1>', func=lambda event: set_get_focus(event=event), add='+')
         self.mf_button.place(x=222, y=92)
 
 
 if __name__ == '__main__':
     root = MainWindow()
+    root.protocol(name='WM_DELETE_WINDOW', func=lambda: on_closing(master=root))
     root.mainloop()
