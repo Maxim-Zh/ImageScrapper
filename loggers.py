@@ -1,14 +1,12 @@
 #! /usr/bin/env python3
 import logging.config
 import os
+import shutil
+
 """
 Log settings
 """
 
-#  create log dir
-log_dir_name = os.path.join(os.path.dirname(__file__), 'Log')
-if not os.path.exists(log_dir_name):
-    os.makedirs(log_dir_name)
 
 logger_config = {
     'version': 1,
@@ -21,14 +19,14 @@ logger_config = {
         'info_handler': {
             'class': 'logging.FileHandler',
             'formatter': 'formatter',
-            'filename': os.path.join(log_dir_name, 'info_log.log'),
+            'filename': 'info_log.log',
             'encoding': 'UTF-8',
             'delay': 'True'
         },
         'error_handler': {
             'class': 'logging.FileHandler',
             'formatter': 'formatter',
-            'filename': os.path.join(log_dir_name, 'error_log.log'),
+            'filename': 'error_log.log',
             'encoding': 'UTF-8',
             'delay': 'True'
         }
@@ -48,6 +46,7 @@ logger_config = {
 logging.config.dictConfig(config=logger_config)
 info_log = logging.getLogger(name='info_log')
 error_log = logging.getLogger(name='error_log')
+
 
 if __name__ == '__main__':
     info_log.info('TEST')
