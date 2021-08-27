@@ -1,6 +1,5 @@
 #! /usr/bin/env python3
 import tkinter as tk
-import os
 from tkinter import ttk
 from handlers import click_on_entry, set_get_focus, start_button, on_closing
 
