@@ -24,7 +24,7 @@ class ImageScrapper:
     def __init__(self):
         # install webdriver
         self.opts = webdriver.ChromeOptions()
-        # self.opts.headless = True
+        self.opts.headless = True
         self.opts.add_argument('start-maximized')
         self.opts.add_argument('--disable-blink-features=AutomationControlled')
         self.opts.add_experimental_option('excludeSwitches', ['enable-automation'])
