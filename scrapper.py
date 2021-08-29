@@ -157,10 +157,10 @@ class ImageScrapper:
         self.webdriver.quit()
         return self.img_urls
 
-    def download_image(self) -> str or None:
+    def download_image(self) -> tuple or None:
         """
         Download images from found urls
-        :return: path to subdir to open it in GUI or None if there if no urls found
+        :return: tuple path to subdir to open it in GUI and len(urls) or None if there if no urls found
         """
         if self.img_urls:
             #  create dirs
@@ -184,7 +184,7 @@ class ImageScrapper:
                 except Exception as err:
                     error_log.exception(f'ERROR downloading {url} - {err}\n')
             info_log.info(f'Successfully downloaded images by query "{self.query}" from {self.search_engine}\n')
-            return sub_dir_path
+            return sub_dir_path, len(self.img_urls)
         else:
             error_log.exception('No URLs found!\n')
             return None
