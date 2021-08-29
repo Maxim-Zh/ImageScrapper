@@ -78,11 +78,19 @@ class MainFrame(tk.Frame):
         # BUTTON
         self.mf_button = ttk.Button(master=self, text='Start')
         self.mf_button.bind(sequence='<Button-1>',
-                            func=lambda event: start_button(search_engine=self.mf_opt_variable.get(),
+                            func=lambda event: start_button(master=self,
+                                                            search_engine=self.mf_opt_variable.get(),
                                                             query=self.mf_search_entry.get(),
-                                                            max_urls=self.mf_max_urls_entry.get()), add='+')
+                                                            max_urls=self.mf_max_urls_entry.get(),
+                                                            progressbar=self.mf_progressbar,
+                                                            button=self.mf_button), add='+')
         self.mf_button.bind(sequence='<Button-1>', func=lambda event: set_focus(event=event), add='+')
         self.mf_button.place(x=222, y=92)
+
+        # PROGRESSBAR
+        self.mf_progressbar = ttk.Progressbar(master=self, mode='indeterminate')
+
+
 
 
 if __name__ == '__main__':

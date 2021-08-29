@@ -1,9 +1,10 @@
 #! /usr/bin/env python3
 import os
 import shutil
-import tkinter
+import tkinter as tk
 import webbrowser
 import logging
+import threading
 from scrapper import ImageScrapper
 from tkinter import messagebox as mb
 from loggers import error_log
@@ -50,33 +51,62 @@ def set_focus(event) -> None:
     event.widget.focus_set()
 
 
-def start_button(search_engine: str, query: str, max_urls: str) -> None:
+def search_and_download(search_engine: str, query: str, max_urls: str, progressbar) -> None:
     """
     Initialize image search and download
 
     :param search_engine: Google, Yandex
     :param query: What to search
     :param max_urls: Number of images required
+    :param progressbar: tk.Progressbar() obj
     :return: None
     """
     if query != '' and max_urls != '' and not max_urls.isalpha():
-        try:
-            scrapper = ImageScrapper()
-            if search_engine == 'Google':
-                scrapper.scrape_google(query=query, max_urls=int(max_urls))
-            if search_engine == 'Yandex':
-                scrapper.scrape_yandex(query=query, max_urls=int(max_urls))
-            result = scrapper.download_image()
-            if result:
-                if mb.askyesno(title='Success', message='Downloading complete. Open directory?'):
-                    webbrowser.open(result[0])
-            else:
-                mb.showinfo(title='Info', message='No images found.')
-        except KeyError as err:
-            error_log.exception(f'No such search engine {search_engine} - {err}\n')
+        scrapper = ImageScrapper()
+        if search_engine == 'Google':
+            progressbar.place(x=40, y=122)
+            progressbar.start()
+            scrapper.scrape_google(query=query, max_urls=int(max_urls))
+        if search_engine == 'Yandex':
+            progressbar.place(x=40, y=122)
+            progressbar.start()
+            scrapper.scrape_yandex(query=query, max_urls=int(max_urls))
+        if search_engine != 'Google' and search_engine != 'Yandex':
+            error_log.exception(f'No such search engine {search_engine}\n')
             mb.showerror(title='Error', message=f'No such search engine {search_engine}!')
+        result = scrapper.download_image()
+        if result and result[1] != 0:
+            if mb.askyesno(title='Success', message='Downloading complete. Open directory?'):
+                webbrowser.open(result[0])
+                progressbar.stop()
+                progressbar.place_forget()
+            progressbar.stop()
+            progressbar.place_forget()
+        else:
+            mb.showinfo(title='Info', message='No images found.')
+            progressbar.stop()
+            progressbar.place_forget()
     else:
         mb.showerror(title='Error', message='Invalid query and/or number!')
+
+
+def start_button(master, search_engine: str, query: str, max_urls: str, progressbar, button):
+    button.config(state=tk.DISABLED)
+    thread = threading.Thread(target=search_and_download,
+                              args=(search_engine, query, max_urls, progressbar),
+                              daemon=True)
+    thread.start()
+    check_thread(master=master, thread=thread)
+    if not check_thread:
+        button.config(state=tk.NORMAL)
+
+
+def check_thread(master, thread):
+    if thread.is_alive():
+        master.after(100, lambda: check_thread(master=master, thread=thread))
+        return True
+    else:
+        return False
 
 
 def on_closing(master) -> None:
