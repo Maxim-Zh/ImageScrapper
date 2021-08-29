@@ -186,7 +186,7 @@ class ImageScrapper:
             info_log.info(f'Successfully downloaded images by query "{self.query}" from {self.search_engine}\n')
             return sub_dir_path, len(self.img_urls)
         else:
-            error_log.exception('No URLs found!\n')
+            error_log.exception(f'No URLs found by given query {self.query}!\n')
             return None
 
 
