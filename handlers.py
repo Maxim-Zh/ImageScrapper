@@ -1,6 +1,7 @@
 #! /usr/bin/env python3
 import os
 import shutil
+import tkinter
 import webbrowser
 import logging
 from scrapper import ImageScrapper
@@ -15,25 +16,38 @@ SRC_DIR = os.path.dirname(__file__)  # executable path
 
 def click_on_entry(entry) -> None:
     """
-    Clears entry on click, preserves content
+    Clears entry on click
 
     :param entry: tk.Entry() obj
     :return: None
     """
-    prev = entry.get()
-    entry.delete(0, 'end')
+    content = entry.get()
+    if content == 'Paste your search' or content == 'N':
+        entry.delete(0, 'end')
 
 
-def set_get_focus(event) -> str:
+def default_value_entry(entry) -> None:
     """
-    Set focus on clicked widgets and returns current focused widget
+    Returns default value in entry field when focused out
+    :param entry: tk.Entry() obj
+    :return: None
+    """
+    content = entry.get()
+    if content == '':
+        if str(entry) == '.!mainframe.!entry':
+            entry.insert(0, 'Paste your search')
+        if str(entry) == '.!mainframe.!entry2':
+            entry.insert(0, 'N')
+
+
+def set_focus(event) -> None:
+    """
+    Set focus on clicked widgets
 
     :param event: event
-    :return: str
+    :return: None
     """
     event.widget.focus_set()
-    print(str(event.widget.focus_get()))
-    return str(event.widget.focus_get())
 
 
 def start_button(search_engine: str, query: str, max_urls: str) -> None:
@@ -55,7 +69,7 @@ def start_button(search_engine: str, query: str, max_urls: str) -> None:
             result = scrapper.download_image()
             if result:
                 if mb.askyesno(title='Success', message='Downloading complete. Open directory?'):
-                    webbrowser.open(result)
+                    webbrowser.open(result[0])
             else:
                 mb.showinfo(title='Info', message='No images found.')
         except KeyError as err:

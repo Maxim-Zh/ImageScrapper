@@ -1,7 +1,7 @@
 #! /usr/bin/env python3
 import tkinter as tk
 from tkinter import ttk
-from handlers import click_on_entry, set_get_focus, start_button, on_closing
+from handlers import click_on_entry, set_focus, start_button, on_closing, default_value_entry
 
 """
 Main GUI module
@@ -30,7 +30,7 @@ class MainWindow(tk.Tk):
         # MAIN FRAME
         self.main_frame = MainFrame(master=self, relief=tk.FLAT)
         self.main_frame.bind(sequence='<Button-1>',
-                             func=lambda event: set_get_focus(event=event))
+                             func=lambda event: set_focus(event=event))
 
 
 class MainFrame(tk.Frame):
@@ -49,10 +49,11 @@ class MainFrame(tk.Frame):
                                      width=WINDOW_WIDTH)
         self.mf_message.place(y=5, relwidth=1, relheight=.5)
         self.mf_message.bind(sequence='<Button-1>',
-                             func=lambda event: set_get_focus(event=event))
+                             func=lambda event: set_focus(event=event))
 
         # OPTION MENU
         self.mf_om = ttk.OptionMenu(self, self.mf_opt_variable, 'Where to search?', *SE_LIST)
+        self.mf_om.bind(sequence='<Button-1>', func=lambda event: set_focus(event=event))
         self.mf_om.place(x=10, y=70)
 
         # ENTRY
@@ -60,23 +61,27 @@ class MainFrame(tk.Frame):
         self.mf_search_entry.insert(0, 'Paste your search')
         self.mf_search_entry.bind(sequence='<Button-1>',
                                   func=lambda event: click_on_entry(entry=self.mf_search_entry), add='+')
-        self.mf_search_entry.bind(sequence='<Button-1>', func=lambda event: set_get_focus(event=event), add='+')
+        self.mf_search_entry.bind(sequence='<Button-1>', func=lambda event: set_focus(event=event), add='+')
+        self.mf_search_entry.bind(sequence='<FocusOut>',
+                                  func=lambda event: default_value_entry(entry=self.mf_search_entry), add='+')
         self.mf_search_entry.place(x=10, y=93, relwidth=.5, relheight=.15, )
 
-        self.mf_max_urls = ttk.Entry(master=self, justify='center')
-        self.mf_max_urls.insert(0, 'N')
-        self.mf_max_urls.bind(sequence='<Button-1>',
-                              func=lambda event: click_on_entry(entry=self.mf_max_urls), add='+')
-        self.mf_max_urls.bind(sequence='<Button-1>', func=lambda event: set_get_focus(event=event), add='+')
-        self.mf_max_urls.place(x=171, y=93, relwidth=.16, relheight=.15)
+        self.mf_max_urls_entry = ttk.Entry(master=self, justify='center')
+        self.mf_max_urls_entry.insert(0, 'N')
+        self.mf_max_urls_entry.bind(sequence='<Button-1>',
+                                    func=lambda event: click_on_entry(entry=self.mf_max_urls_entry), add='+')
+        self.mf_max_urls_entry.bind(sequence='<Button-1>', func=lambda event: set_focus(event=event), add='+')
+        self.mf_max_urls_entry.bind(sequence='<FocusOut>',
+                                    func=lambda event: default_value_entry(entry=self.mf_max_urls_entry), add='+')
+        self.mf_max_urls_entry.place(x=171, y=93, relwidth=.16, relheight=.15)
 
         # BUTTON
         self.mf_button = ttk.Button(master=self, text='Start')
         self.mf_button.bind(sequence='<Button-1>',
                             func=lambda event: start_button(search_engine=self.mf_opt_variable.get(),
                                                             query=self.mf_search_entry.get(),
-                                                            max_urls=self.mf_max_urls.get()), add='+')
-        self.mf_button.bind(sequence='<Button-1>', func=lambda event: set_get_focus(event=event), add='+')
+                                                            max_urls=self.mf_max_urls_entry.get()), add='+')
+        self.mf_button.bind(sequence='<Button-1>', func=lambda event: set_focus(event=event), add='+')
         self.mf_button.place(x=222, y=92)
 
 
