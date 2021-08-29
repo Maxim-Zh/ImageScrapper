@@ -90,7 +90,18 @@ def search_and_download(search_engine: str, query: str, max_urls: str, progressb
         mb.showerror(title='Error', message='Invalid query and/or number!')
 
 
-def start_button(master, search_engine: str, query: str, max_urls: str, progressbar, button):
+def start_button(master, search_engine: str, query: str, max_urls: str, progressbar, button) -> None:
+    """
+    Gathers parameters from widgets and initializes thread
+
+    :param master: Parent widget
+    :param search_engine: Google, Yandex
+    :param query: What to search
+    :param max_urls: Number of images required
+    :param progressbar: ttk.Progressbar() obj
+    :param button: ttl.Button() obj
+    :return: None
+    """
     button.config(state=tk.DISABLED)
     thread = threading.Thread(target=search_and_download,
                               args=(search_engine, query, max_urls, progressbar),
@@ -99,7 +110,10 @@ def start_button(master, search_engine: str, query: str, max_urls: str, progress
     check_thread(master=master, thread=thread, button=button)
 
 
-def check_thread(master, thread, button):
+def check_thread(master, thread, button) -> None:
+    """
+    Checks if thread is alive
+    """
     if thread.is_alive():
         master.after(100, lambda: check_thread(master=master, thread=thread, button=button))
     else:
