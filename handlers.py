@@ -96,17 +96,14 @@ def start_button(master, search_engine: str, query: str, max_urls: str, progress
                               args=(search_engine, query, max_urls, progressbar),
                               daemon=True)
     thread.start()
-    check_thread(master=master, thread=thread)
-    if not check_thread:
-        button.config(state=tk.NORMAL)
+    check_thread(master=master, thread=thread, button=button)
 
 
-def check_thread(master, thread):
+def check_thread(master, thread, button):
     if thread.is_alive():
-        master.after(100, lambda: check_thread(master=master, thread=thread))
-        return True
+        master.after(100, lambda: check_thread(master=master, thread=thread, button=button))
     else:
-        return False
+        button.config(state=tk.NORMAL)
 
 
 def on_closing(master) -> None:
