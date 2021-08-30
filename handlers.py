@@ -75,9 +75,9 @@ def search_and_download(search_engine: str, query: str, max_urls: str, progressb
             error_log.exception(f'No such search engine {search_engine}\n')
             mb.showerror(title='Error', message=f'No such search engine {search_engine}!')
         result = scrapper.download_image()
-        if result and result[1] != 0:
+        if result:
             if mb.askyesno(title='Success', message='Downloading complete. Open directory?'):
-                webbrowser.open(result[0])
+                webbrowser.open(result)
                 progressbar.stop()
                 progressbar.place_forget()
             progressbar.stop()
