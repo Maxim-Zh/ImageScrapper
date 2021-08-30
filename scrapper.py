@@ -151,6 +151,7 @@ class ImageScrapper:
                         self.img_urls.add(full_img.get_attribute('src'))
                     self.img_count = len(self.img_urls)
                     html_elem.send_keys(Keys.ARROW_DOWN)
+                info_log.info(f'Got {self.img_count} image links!')
             except Exception as err:
                 error_log.exception(f'{err}\n')
         # close browser
