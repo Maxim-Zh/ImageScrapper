@@ -72,7 +72,7 @@ def search_and_download(search_engine: str, query: str, max_urls: str, progressb
             progressbar.start()
             scrapper.scrape_yandex(query=query, max_urls=int(max_urls))
         if search_engine != 'Google' and search_engine != 'Yandex':
-            error_log.exception(f'No such search engine {search_engine}\n')
+            error_log.error(f'No such search engine {search_engine}\n')
             mb.showerror(title='Error', message=f'No such search engine {search_engine}!')
         result = scrapper.download_image()
         if result:
