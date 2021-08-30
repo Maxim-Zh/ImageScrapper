@@ -91,8 +91,6 @@ class MainFrame(tk.Frame):
         self.mf_progressbar = ttk.Progressbar(master=self, mode='indeterminate')
 
 
-
-
 if __name__ == '__main__':
     root = MainWindow()
     root.protocol(name='WM_DELETE_WINDOW', func=lambda: on_closing(master=root))
