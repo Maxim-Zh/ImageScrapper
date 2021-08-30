@@ -25,7 +25,7 @@ class MainWindow(tk.Tk):
         self.title('Image Scrapper')
         self.geometry(f'{self.ww}x{self.wh}+{self.sw // 2 - self.ww // 2}+{self.sh // 2 - self.wh // 2}')
         self.resizable(False, False)
-        self.iconbitmap(r'E:\MyPythonProjects\ImageScrapper\icon\icon.ico')
+        self.iconbitmap(r'icon\icon.ico')
 
         # MAIN FRAME
         self.main_frame = MainFrame(master=self, relief=tk.FLAT)
