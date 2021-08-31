@@ -43,10 +43,10 @@ class MainFrame(tk.Frame):
 
         # MESSAGE
         self.mf_message = tk.Message(master=self,
-                                     text='Search and saves image from website',
+                                     text='Search and saves images from search engine',
                                      font=('Arial', 14),
                                      justify='center',
-                                     width=WINDOW_WIDTH)
+                                     width=WINDOW_WIDTH-10)
         self.mf_message.place(y=5, relwidth=1, relheight=.5)
         self.mf_message.bind(sequence='<Button-1>',
                              func=lambda event: set_focus(event=event))
@@ -58,7 +58,7 @@ class MainFrame(tk.Frame):
 
         # ENTRY
         self.mf_search_entry = ttk.Entry(master=self, justify='center')
-        self.mf_search_entry.insert(0, 'Paste your search')
+        self.mf_search_entry.insert(0, 'Paste your query')
         self.mf_search_entry.bind(sequence='<Button-1>',
                                   func=lambda event: click_on_entry(entry=self.mf_search_entry), add='+')
         self.mf_search_entry.bind(sequence='<Button-1>', func=lambda event: set_focus(event=event), add='+')
