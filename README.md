@@ -11,7 +11,7 @@ This app search Google or Yandex by your query and download images.
 -video or gif here-
 
 # What it does
--describtion here-
+-description here-
 
 # Requirements
 - Python 3.9
