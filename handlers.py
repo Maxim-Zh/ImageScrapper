@@ -23,7 +23,7 @@ def click_on_entry(entry) -> None:
     :return: None
     """
     content = entry.get()
-    if content == 'Paste your search' or content == 'N':
+    if content == 'Paste your query' or content == 'N':
         entry.delete(0, 'end')
 
 
@@ -36,7 +36,7 @@ def default_value_entry(entry) -> None:
     content = entry.get()
     if content == '':
         if str(entry) == '.!mainframe.!entry':
-            entry.insert(0, 'Paste your search')
+            entry.insert(0, 'Paste your query')
         if str(entry) == '.!mainframe.!entry2':
             entry.insert(0, 'N')
 
