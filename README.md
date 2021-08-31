@@ -8,7 +8,7 @@ This app search Google or Yandex by your query and download images.
 - Simple GUI
 
 # How it looks
--video or gif here-
+![alt-text](https://github.com/Maxim-Zh/GIFs/raw/main/ImageScraper_in_field.gif)
 
 # What it does
 -description here-
