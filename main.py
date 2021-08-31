@@ -1,7 +1,7 @@
 #! /usr/bin/env python3
 import tkinter as tk
 from tkinter import ttk
-from handlers import click_on_entry, set_focus, start_button, on_closing, default_value_entry
+from handlers import StartButton, CloseButton, click_on_entry, set_focus, default_value_entry
 
 """
 Main GUI module
@@ -46,7 +46,7 @@ class MainFrame(tk.Frame):
                                      text='Search and saves images from search engine',
                                      font=('Arial', 14),
                                      justify='center',
-                                     width=WINDOW_WIDTH-10)
+                                     width=WINDOW_WIDTH - 10)
         self.mf_message.place(y=5, relwidth=1, relheight=.5)
         self.mf_message.bind(sequence='<Button-1>',
                              func=lambda event: set_focus(event=event))
@@ -76,16 +76,16 @@ class MainFrame(tk.Frame):
         self.mf_max_urls_entry.place(x=171, y=93, relwidth=.16, relheight=.15)
 
         # BUTTON
-        self.mf_button = ttk.Button(master=self, text='Start')
-        self.mf_button.bind(sequence='<Button-1>',
-                            func=lambda event: start_button(master=self,
-                                                            search_engine=self.mf_opt_variable.get(),
-                                                            query=self.mf_search_entry.get(),
-                                                            max_urls=self.mf_max_urls_entry.get(),
-                                                            progressbar=self.mf_progressbar,
-                                                            button=self.mf_button), add='+')
-        self.mf_button.bind(sequence='<Button-1>', func=lambda event: set_focus(event=event), add='+')
-        self.mf_button.place(x=222, y=92)
+        self.mf_start_button = ttk.Button(master=self, text='Start')
+        self.mf_start_button.bind(sequence='<Button-1>',
+                                  func=lambda event: StartButton(master=self).start_button(
+                                                                      progressbar=self.mf_progressbar,
+                                                                      button=self.mf_start_button,
+                                                                      search_engine=self.mf_opt_variable.get(),
+                                                                      query=self.mf_search_entry.get(),
+                                                                      max_urls=self.mf_max_urls_entry.get()), add='+')
+        self.mf_start_button.bind(sequence='<Button-1>', func=lambda event: set_focus(event=event), add='+')
+        self.mf_start_button.place(x=222, y=92)
 
         # PROGRESSBAR
         self.mf_progressbar = ttk.Progressbar(master=self, mode='indeterminate')
@@ -93,5 +93,5 @@ class MainFrame(tk.Frame):
 
 if __name__ == '__main__':
     root = MainWindow()
-    root.protocol(name='WM_DELETE_WINDOW', func=lambda: on_closing(master=root))
+    root.protocol(name='WM_DELETE_WINDOW', func=lambda: CloseButton(master=root).close_button())
     root.mainloop()
