@@ -12,3 +12,11 @@ This app search Google or Yandex by your query and download images.
 
 # What it does
 -describtion here-
+
+# Requirements
+- Python 3.9
+- selenium 3.141.0
+- webdriver_manager 3.4.2 (source: https://github.com/SergeyPirogov/webdriver_manager)
+- psutil 5.8.0
+- PIL 8.3.1
+- requests 2.26.0
