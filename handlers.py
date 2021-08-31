@@ -13,6 +13,8 @@ from loggers import error_log
 Handle keypress, click, other events
 """
 SRC_DIR = os.path.dirname(__file__)  # executable path
+SCRAPPER = None
+THREAD = None
 
 
 def click_on_entry(entry) -> None:
@@ -62,19 +64,22 @@ def search_and_download(search_engine: str, query: str, max_urls: str, progressb
     :return: None
     """
     if query != '' and max_urls != '' and not max_urls.isalpha():
-        scrapper = ImageScrapper()
+        global SCRAPPER
+        SCRAPPER = ImageScrapper()
         if search_engine == 'Google':
             progressbar.place(x=40, y=122)
             progressbar.start()
-            scrapper.scrape_google(query=query, max_urls=int(max_urls))
+            SCRAPPER.scrape_google(query=query, max_urls=int(max_urls))
         if search_engine == 'Yandex':
             progressbar.place(x=40, y=122)
             progressbar.start()
-            scrapper.scrape_yandex(query=query, max_urls=int(max_urls))
+            SCRAPPER.scrape_yandex(query=query, max_urls=int(max_urls))
         if search_engine != 'Google' and search_engine != 'Yandex':
             error_log.error(f'No such search engine {search_engine}\n')
             mb.showerror(title='Error', message=f'No such search engine {search_engine}!')
-        result = scrapper.download_image()
+            SCRAPPER.webdriver.quit()
+            return
+        result = SCRAPPER.download_image()
         if result:
             if mb.askyesno(title='Success', message='Downloading complete. Open directory?'):
                 webbrowser.open(result)
@@ -102,12 +107,14 @@ def start_button(master, search_engine: str, query: str, max_urls: str, progress
     :param button: ttl.Button() obj
     :return: None
     """
+    global THREAD
+    button.config(text='Working')
     button.config(state=tk.DISABLED)
-    thread = threading.Thread(target=search_and_download,
+    THREAD = threading.Thread(target=search_and_download,
                               args=(search_engine, query, max_urls, progressbar),
                               daemon=True)
-    thread.start()
-    check_thread(master=master, thread=thread, button=button)
+    THREAD.start()
+    check_thread(master=master, thread=THREAD, button=button)
 
 
 def check_thread(master, thread, button) -> None:
@@ -117,6 +124,7 @@ def check_thread(master, thread, button) -> None:
     if thread.is_alive():
         master.after(100, lambda: check_thread(master=master, thread=thread, button=button))
     else:
+        button.config(text='Start')
         button.config(state=tk.NORMAL)
 
 
@@ -162,5 +170,9 @@ def on_closing(master) -> None:
                     for line in new_log:
                         old_log.write(line)
                 os.remove(os.path.join(SRC_DIR, 'error_log.log'))
+
+        if isinstance(THREAD, threading.Thread) and isinstance(SCRAPPER, ImageScrapper):
+            THREAD.join()
+            SCRAPPER.webdriver.quit()
 
         master.destroy()
