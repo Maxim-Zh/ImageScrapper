@@ -10,9 +10,6 @@ This app search Google or Yandex by your query and download images.
 # How it looks
 ![alt-text](https://github.com/Maxim-Zh/GIFs/raw/main/ImageScrapper_in_the_field.gif)
 
-# What it does
--description here-
-
 # Requirements
 - Python 3.9
 - selenium 3.141.0
