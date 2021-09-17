@@ -195,7 +195,7 @@ class CreateToolTip:
         """
         Removes tooltip window
 
-        :param event:
+        :param event: event
         :return: None
         """
         if self.tooltip_window:
