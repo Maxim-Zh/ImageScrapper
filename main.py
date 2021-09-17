@@ -1,7 +1,7 @@
 #! /usr/bin/env python3
 import tkinter as tk
 from tkinter import ttk
-from handlers import StartButton, CloseButton, click_on_entry, set_focus, default_value_entry
+from handlers import StartButton, CloseButton, CreateToolTip, click_on_entry, set_focus, default_value_entry
 
 """
 Main GUI module
@@ -43,7 +43,7 @@ class MainFrame(tk.Frame):
 
         # MESSAGE
         self.mf_message = tk.Message(master=self,
-                                     text='Search and saves images from search engine',
+                                     text='Searches and saves images from search engine',
                                      font=('Arial', 14),
                                      justify='center',
                                      width=WINDOW_WIDTH - 10)
@@ -79,16 +79,19 @@ class MainFrame(tk.Frame):
         self.mf_start_button = ttk.Button(master=self, text='Start')
         self.mf_start_button.bind(sequence='<Button-1>',
                                   func=lambda event: StartButton(master=self).start_button(
-                                                                      progressbar=self.mf_progressbar,
-                                                                      button=self.mf_start_button,
-                                                                      search_engine=self.mf_opt_variable.get(),
-                                                                      query=self.mf_search_entry.get(),
-                                                                      max_urls=self.mf_max_urls_entry.get()), add='+')
+                                      progressbar=self.mf_progressbar,
+                                      button=self.mf_start_button,
+                                      search_engine=self.mf_opt_variable.get(),
+                                      query=self.mf_search_entry.get(),
+                                      max_urls=self.mf_max_urls_entry.get()), add='+')
         self.mf_start_button.bind(sequence='<Button-1>', func=lambda event: set_focus(event=event), add='+')
         self.mf_start_button.place(x=222, y=92)
 
         # PROGRESSBAR
         self.mf_progressbar = ttk.Progressbar(master=self, mode='indeterminate')
+
+        # TOOLTIPS
+        self.tooltip = CreateToolTip(widget=self.mf_max_urls_entry, text='Specify required number of images')
 
 
 if __name__ == '__main__':

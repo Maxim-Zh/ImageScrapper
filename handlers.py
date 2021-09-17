@@ -161,6 +161,47 @@ class CloseButton:
             self.master.destroy()
 
 
+class CreateToolTip:
+
+    def __init__(self, widget, text='widget info'):
+        self.widget = widget
+        self.text = text
+        self.widget.bind(sequence="<Enter>", func=self.tooltip_enter)
+        self.widget.bind(sequence="<Leave>", func=self.tooltip_leave)
+
+    def tooltip_enter(self, event) -> None:
+        """
+        Creates toplevel tooltip window when mouse hovers over widget
+
+        :return: None
+        """
+
+        x, y, cx, cy = self.widget.bbox("insert")
+        x += self.widget.winfo_rootx() - 118
+        y += self.widget.winfo_rooty() + 25
+
+        # Creates a toplevel window
+        self.tooltip_window = tk.Toplevel(self.widget)
+
+        # Leaves only the label and removes the app window
+        self.tooltip_window.wm_overrideredirect(True)
+        self.tooltip_window.wm_geometry(f'+{x}+{y}')
+        tooltip = tk.Label(self.tooltip_window, text=self.text, justify='left',
+                           background='white', relief='solid', borderwidth=1,
+                           font=("Arial", "10", "normal"))
+        tooltip.pack(ipadx=10)
+
+    def tooltip_leave(self, event) -> None:
+        """
+        Removes tooltip window
+
+        :param event:
+        :return: None
+        """
+        if self.tooltip_window:
+            self.tooltip_window.destroy()
+
+
 def click_on_entry(entry) -> None:
     """
     Clears entry on click
